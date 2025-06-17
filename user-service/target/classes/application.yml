@@ -1,27 +1,30 @@
 server:
   port: 8081
-
+# error:
+#     include-message: always
+#     include-stacktrace: always
 spring:
-  application:
-    name: user-service
-
   datasource:
     url: jdbc:postgresql://localhost:5432/userdb
     username: postgres
     password: root
-    driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   jackson:
     serialization:
-      fail-on-empty-beans: false
+      WRITE_DATES_AS_TIMESTAMPS: false
 
-logging:
-  level:
-    root: INFO
-    org.springframework: INFO
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    prometheus:
+      enabled: true
