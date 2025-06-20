@@ -4,11 +4,12 @@ import com.example.userservice.dto.*;
 import com.example.userservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.security.Principal;
 import java.util.UUID;
 
 @RestController
@@ -16,52 +17,66 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<Void> createUser(@Valid @RequestBody CreateUserRequest request) {
-        UUID userId = userService.createUser(request);
-        return ResponseEntity.created(URI.create("/v1/users/" + userId)).build();
-    }
-
-    @GetMapping("/{id}")
-public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id,
-                                                Principal principal,
-                                                @RequestHeader(value = "X-User-Role", required = false) String role,
-                                                @RequestHeader(value = "X-User-Email", required = false) String emailHeader) {
-    boolean isAdmin = "ROLE_ADMIN".equals(role);
-    String requesterEmail = (principal != null) ? principal.getName() :
-                            (emailHeader != null ? emailHeader : "g0@example.com");
-
-    System.out.println("Requester Email: " + requesterEmail);
-    UserResponse user = userService.getUserById(id, requesterEmail, isAdmin);
-    return ResponseEntity.ok(user);
+  @PostMapping
+public ResponseEntity<MessageResponse> createUser(
+        @Valid @RequestBody CreateUserRequest request
+) {
+    log.info("Creating user: {}", request.email());
+    UserResponse created = userService.createUser(request);
+    URI location = URI.create("/v1/users/" + created.id());
+    return ResponseEntity
+            .created(location)
+            .body(new MessageResponse("User created successfully"));
 }
 
-   @PutMapping("/{id}")
+ 
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUserById(
+            @PathVariable UUID id,
+            @RequestHeader(value = "X-User-Email", required = false) String emailHeader,
+            @RequestHeader(value = "X-User-Role", required = false) String role
+    ) {
+        String requesterEmail = emailHeader != null ? emailHeader : "anonymous@example.com";
+        log.info("Fetching user {} by requester {}", id, requesterEmail);
+        UserResponse user = userService.getUserById(id, requesterEmail);
+        return ResponseEntity.ok(user);
+    }
+
+
+    @PutMapping("/{id}")
 public ResponseEntity<UserResponse> updateUser(
         @PathVariable UUID id,
-        @RequestBody UpdateUserRequest request,
-        @RequestHeader("X-User-Email") String email,
-        @RequestHeader("X-User-Role") String role
+        @Valid @RequestBody UpdateUserRequest request,
+        @RequestHeader("X-User-Email") String requesterEmail
 ) {
-    boolean isAdmin = role.equalsIgnoreCase("ROLE_ADMIN");
-    UserResponse updated = userService.updateUser(id, request, email, isAdmin);
+    log.info("Updating user {} by {}", id, requesterEmail);
+    UserResponse updated = userService.updateUser(id, request, requesterEmail);
     return ResponseEntity.ok(updated);
 }
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
+@DeleteMapping("/{id}")
+public ResponseEntity<MessageResponse> deleteUser(
+        @PathVariable UUID id,
+        @RequestHeader("X-User-Email") String requesterEmail
+) {
+    log.info("Deleting user {}", id);
+    userService.deleteUser(id, requesterEmail);
+    return ResponseEntity.ok(new MessageResponse("User deleted successfully"));
+}
+
 
     @PostMapping("/password-reset/request")
-public ResponseEntity<Void> requestPasswordReset(@RequestBody PasswordResetRequest request) {
-    userService.requestPasswordReset(request);
-    return ResponseEntity.ok().build();
-}
+    public ResponseEntity<Void> requestPasswordReset(@Valid @RequestBody PasswordResetRequest request) {
+        log.info("Password reset requested for {}", request.email());
+        userService.requestPasswordReset(request);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/reset-password")
     public ResponseEntity<MessageResponse> performReset(@Valid @RequestBody PasswordResetTokenRequest request) {

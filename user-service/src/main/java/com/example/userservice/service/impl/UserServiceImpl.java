@@ -2,152 +2,121 @@ package com.example.userservice.service.impl;
 
 import com.example.userservice.dto.*;
 import com.example.userservice.entity.UserProfile;
-import com.example.userservice.exception.*;
+import com.example.userservice.exception.ConflictException;
+import com.example.userservice.exception.ForbiddenException;
+import com.example.userservice.exception.NotFoundException;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.service.UserService;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.security.Key;
 import java.time.Instant;
-import java.util.Date;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
-    private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${app.reset-token.secret:resetSecretKey12345678901234567890}")
-    private String resetTokenSecret;
-
-    @Value("${app.reset-token.expiry-minutes:30}")
-    private long resetTokenExpiryMinutes;
-
-    @Value("${app.audit.url:http://audit-service:8086/v1/audit/events}")
-    private String auditServiceUrl;
-
-   @Override
+    @Override
 @Transactional
-public UUID createUser(CreateUserRequest request) {
+public UserResponse createUser(CreateUserRequest request) {
     if (userRepository.existsByEmail(request.email())) {
-        throw new ConflictException("Email already in use");
+        throw new ConflictException("Email already exists");
     }
 
-    UserProfile profile = UserProfile.builder()
+    if (userRepository.existsByPhone(request.phone())) {
+        throw new ConflictException("Phone number already exists");
+    }
+
+    UserProfile user = UserProfile.builder()
+            .id(UUID.randomUUID())
             .email(request.email())
-            .fullName(request.fullName())
+            .firstName(request.firstName())
+            .lastName(request.lastName())
             .phone(request.phone())
             .createdAt(Instant.now())
             .updatedAt(Instant.now())
             .build();
 
-    userRepository.save(profile);
-    sendAudit("CREATE_USER", profile.getEmail(), profile.getId());
-    return profile.getId();
+    userRepository.save(user);
+
+return new UserResponse(
+        user.getId(),
+        user.getEmail(),
+        user.getFirstName(),
+        user.getLastName(),
+        user.getPhone()
+);}
+
+
+    @Override
+    public UserResponse getUserById(UUID id, String requesterEmail) {
+        UserProfile user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+   return new UserResponse(
+        user.getId(),
+        user.getEmail(),
+        user.getFirstName(),
+        user.getLastName(),
+        user.getPhone()
+); }
+
+    @Override
+@Transactional
+public UserResponse updateUser(UUID id, UpdateUserRequest request, String requesterEmail) {
+    UserProfile user = userRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("User not found"));
+
+    if (!user.getEmail().equals(requesterEmail)) {
+        throw new ForbiddenException("You can only update your own profile");
+    }
+
+    if (request.phone() != null && !request.phone().equals(user.getPhone())) {
+        if (userRepository.existsByPhone(request.phone())) {
+            throw new ConflictException("Phone number already exists");
+        }
+        user.setPhone(request.phone());
+    }
+
+    if (request.firstName() != null) user.setFirstName(request.firstName());
+    if (request.lastName() != null) user.setLastName(request.lastName());
+
+    user.setUpdatedAt(Instant.now());
+    userRepository.save(user);
+
+    return new UserResponse( user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone());
+}
+
+
+@Override
+@Transactional
+public void deleteUser(UUID id, String requesterEmail) {
+    UserProfile user = userRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("User not found"));
+
+    if (!user.getEmail().equals(requesterEmail)) {
+        throw new ForbiddenException("You can only delete your own profile");
+    }
+
+    userRepository.delete(user);
 }
 
 
     @Override
-    public UserResponse getUserById(UUID id, String requesterEmail, boolean isAdmin) {
-        UserProfile user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        if (!user.getEmail().equals(requesterEmail) && !isAdmin) {
-            throw new ForbiddenException("Access denied");
-        }
-
-        return new UserResponse(user.getEmail(), user.getFullName(), user.getPhone());
-    }
-
-    @Override
-    @Transactional
-    public UserResponse updateUser(UUID id, UpdateUserRequest request, String requesterEmail, boolean isAdmin) {
-        UserProfile user = userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User not found"));
-
-        if (!user.getEmail().equals(requesterEmail) && !isAdmin) {
-            throw new ForbiddenException("editing other user as non-admin");
-        }
-
-        if (request.fullName() != null) user.setFullName(request.fullName());
-        if (request.phone() != null) user.setPhone(request.phone());
-
-        return new UserResponse(user.getEmail(), user.getFullName(), user.getPhone());
-    }
-
-    @Override
-    @Transactional
-    public void deleteUser(UUID id) {
-        if (!userRepository.existsById(id)) {
-            throw new NotFoundException("not found");
-        }
-        userRepository.deleteById(id);
-    }
-
-    @Override
     public void requestPasswordReset(PasswordResetRequest request) {
-        userRepository.findByEmail(request.email()).ifPresent(user -> {
-            String token = Jwts.builder()
-                    .setSubject(user.getEmail())
-                    .setExpiration(Date.from(Instant.now().plusSeconds(resetTokenExpiryMinutes * 60)))
-                    .signWith(getSigningKey())
-                    .compact();
-
-                    System.out.println("RESET TOKEN: " + token);
-            
-            // Normally send via email — for now, print that in terminal
-            sendAudit("PASSWORD_RESET_REQUEST", user.getEmail(), user.getId());
-        });
+        log.info("Password reset request received for {}", request.email());
     }
 
     @Override
-    public void performPasswordReset(PasswordResetTokenRequest request) {
-        String email;
-        try {
-            email = Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(request.token())
-                    .getBody()
-                    .getSubject();
-        } catch (JwtException e) {
-            throw new BadRequestException("Token invalid or expired");
-        }
-
-        userRepository.findByEmail(email).ifPresentOrElse(user -> {
-            // In system, password update happens in auth-service
-            sendAudit("PASSWORD_RESET_COMPLETE", user.getEmail(), user.getId());
-        }, () -> {
-            throw new NotFoundException("User not found");
-        });
-    }
-
-    private void sendAudit(String action, String email, UUID userId) {
-        var event = new AuditEventRequest(
-                "user-service", action,
-                new AuditPayload(email, userId),
-                Instant.now().toString()
-        );
-        try {
-            restTemplate.postForEntity(auditServiceUrl, event, Void.class);
-        } catch (Exception e) {
-            // log failure, do not break user flow
-        }
-    }
-
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(resetTokenSecret.getBytes());
-    }
-
-    // Inner static classes for audit request payload
-    record AuditEventRequest(String service, String action, AuditPayload payload, String timestamp) {}
-    record AuditPayload(String email, UUID userId) {}
+public void performPasswordReset(PasswordResetTokenRequest request) {
+    log.info("Password reset token submitted: {}", request.token());
+    
+}
 }
