@@ -3,20 +3,25 @@ package com.example.userservice.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public record CreateUserRequest(
+        @NotBlank(message = "First name is required")
+        @Size(max = 50)
+        String firstName,
 
-    @Email(message = "invalid email format")
-    @NotBlank(message = "email is required")
-    String email,
+        @NotBlank(message = "Last name is required")
+        @Size(max = 50)
+        String lastName,
 
-    // @NotBlank(message = "password is required")
-    // String password,
+        @NotBlank(message = "Email is required")
+        @Pattern(
+            regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+            message = "Invalid email format"
+        )
+        String email,
 
-    @NotBlank(message = "full name is required")
-    String fullName,
-
-    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "invalid phone number")
-    String phone
-
+        @NotBlank(message = "Phone is required")
+        @Pattern(regexp = "\\d{10}", message = "Phone must be exactly 10 digits")
+        String phone
 ) {}

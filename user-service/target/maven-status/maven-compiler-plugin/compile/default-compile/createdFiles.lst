@@ -4,7 +4,6 @@ com\example\userservice\controller\UserController$MessageResponse.class
 com\example\userservice\dto\PasswordResetRequest.class
 com\example\userservice\exception\NotFoundException.class
 com\example\userservice\dto\UpdateUserRequest.class
-com\example\userservice\service\impl\UserServiceImpl$AuditPayload.class
 com\example\userservice\entity\UserProfile.class
 com\example\userservice\exception\ApiException.class
 com\example\userservice\UserServiceApplication.class
@@ -16,6 +15,5 @@ com\example\userservice\exception\GlobalExceptionHandler.class
 com\example\userservice\dto\PasswordResetTokenRequest.class
 com\example\userservice\service\impl\UserServiceImpl.class
 com\example\userservice\repository\UserRepository.class
-com\example\userservice\service\impl\UserServiceImpl$AuditEventRequest.class
 com\example\userservice\dto\CreateUserRequest.class
 com\example\userservice\entity\UserProfile$UserProfileBuilder.class

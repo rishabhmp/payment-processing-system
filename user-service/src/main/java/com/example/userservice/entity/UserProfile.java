@@ -24,9 +24,13 @@ public class UserProfile {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "full_name")
-    private String fullName;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
 
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @Column(length = 20)
     private String phone;
 
     @Column(name = "created_at", nullable = false, updatable = false)
