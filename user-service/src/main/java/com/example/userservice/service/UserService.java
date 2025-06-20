@@ -5,10 +5,16 @@ import com.example.userservice.dto.*;
 import java.util.UUID;
 
 public interface UserService {
-    UserResponse createUser(CreateUserRequest request);
-    UserResponse getUserById(UUID id, String requesterEmail);
-    UserResponse updateUser(UUID id, UpdateUserRequest request, String requesterEmail);
-    void deleteUser(UUID id, String requesterEmail);
+    UUID createUser(CreateUserRequest request);
+    // UserResponse getUserById(String requesterEmail);
+    UserResponse getUserById(UUID id);
+
+    // UserResponse updateUser(UpdateUserRequest request, String requesterEmail);
+    UserResponse updateUser(UUID id, UpdateUserRequest request);
+
+    // void deleteUser(String requesterEmail);
+    void deleteUser(UUID id);
+
     void requestPasswordReset(PasswordResetRequest request);
-    void performPasswordReset(PasswordResetTokenRequest request); // corrected name
+    void performPasswordReset(PasswordResetTokenRequest request);
 }
