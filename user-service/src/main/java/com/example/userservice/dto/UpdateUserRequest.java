@@ -12,10 +12,10 @@ public record UpdateUserRequest(
 
         @NotBlank(message = "Last name is required")
         @Size(max = 50)
-        String lastName,
+        String lastName
 
-        @NotBlank(message = "Phone is required")
-        @Pattern(regexp = "\\d{10}", message = "Phone must be exactly 10 digits")
-        String phone
+        // @NotBlank(message = "Phone is required")
+        // @Pattern(regexp = "\\d{10}", message = "Phone must be exactly 10 digits")
+        // String phone
 
 ) {}

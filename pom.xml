@@ -10,8 +10,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>api-gateway</module>
         <module>user-service</module>
+        <module>auth-service</module>
     </modules>
 
     <properties>

@@ -6,10 +6,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.UUID;
 
 @RestController
@@ -20,14 +24,21 @@ public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
-    @PostMapping
-public ResponseEntity<UserCreatedResponse> createUser(@Valid @RequestBody CreateUserRequest request) {
+@PostMapping
+public ResponseEntity<Map<String, String>> createUser(@Valid @RequestBody CreateUserRequest request) {
     log.info("Creating user: {}", request.email());
-    UUID id = userService.createUser(request);
-    return ResponseEntity.status(201).body(new UserCreatedResponse("User created successfully", id));
+    UUID userId = userService.createUser(request);
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("X-User-Id", userId.toString());
+
+    Map<String, String> response = new HashMap<>();
+    response.put("message", "User created successfully");
+
+    return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(response);
 }
 
-public record UserCreatedResponse(String message, UUID userId) {}
+// public record UserCreatedResponse(String message, UUID userId) {}
 
 
    @GetMapping("/{id}")
