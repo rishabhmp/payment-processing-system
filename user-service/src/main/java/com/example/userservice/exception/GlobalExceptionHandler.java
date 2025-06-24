@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> handleValidation(ConstraintViolationException ex) {
+    public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
         String message = ex.getConstraintViolations().stream()
                 .map(cv -> cv.getMessage())
                 .findFirst()
@@ -35,23 +35,25 @@ public class GlobalExceptionHandler {
         return errorResponse(message, 400);
     }
 
-  @ExceptionHandler(ApiException.class)
-public ResponseEntity<Object> handleApi(ApiException ex) {
-    int status;
-    if (ex instanceof BadRequestException) {
-        status = 400;
-    } else if (ex instanceof ConflictException) {
-        status = 409;
-    } else if (ex instanceof ForbiddenException) {
-        status = 403;
-    } else if (ex instanceof NotFoundException) {
-        status = 404;
-    } else {
-        status = 400;
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Object> handleBadRequest(BadRequestException ex) {
+        return errorResponse(ex.getMessage(), 400);
     }
-    return errorResponse(ex.getMessage(), status);
-}
 
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<Object> handleConflict(ConflictException ex) {
+        return errorResponse(ex.getMessage(), 409);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Object> handleForbidden(ForbiddenException ex) {
+        return errorResponse(ex.getMessage(), 403);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handleNotFound(NotFoundException ex) {
+        return errorResponse(ex.getMessage(), 404);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneric(Exception ex) {
