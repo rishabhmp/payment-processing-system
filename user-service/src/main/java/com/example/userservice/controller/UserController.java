@@ -35,11 +35,8 @@ public ResponseEntity<Map<String, String>> createUser(@Valid @RequestBody Create
     Map<String, String> response = new HashMap<>();
     response.put("message", "User created successfully");
 
-    return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(response);
+    return ResponseEntity.status(HttpStatus.CREATED).headers(headers).body(response); 
 }
-
-// public record UserCreatedResponse(String message, UUID userId) {}
-
 
    @GetMapping("/{id}")
 public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
@@ -61,7 +58,7 @@ public ResponseEntity<UserResponse> updateUser(
 public ResponseEntity<MessageResponse> deleteUser(@PathVariable UUID id) {
     log.info("Deleting user by ID: {}", id);
     userService.deleteUser(id);
-    return ResponseEntity.ok(new MessageResponse("User deleted successfully"));
+    return ResponseEntity.ok(new MessageResponse("User deleted successfully"));  
 }
 
     public record MessageResponse(String message) {}

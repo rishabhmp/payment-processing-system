@@ -1,0 +1,22 @@
+server:
+  port: 8082
+logging:
+  level:
+    org.springframework.web: DEBUG
+    com.example.authservice: DEBUG
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/authdb
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret: secret-key-change-this-in-prod-very-long-secret-256bits
+  expirationMs: 3600000

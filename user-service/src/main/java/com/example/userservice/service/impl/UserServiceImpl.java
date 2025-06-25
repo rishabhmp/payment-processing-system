@@ -59,15 +59,6 @@ public UserResponse updateUser(UUID id, UpdateUserRequest request) {
     user.setFirstName(request.firstName());
     user.setLastName(request.lastName());
 
-    // Update phone only if it's different
-    // String newPhone = request.phone();
-    // if (!user.getPhone().equals(newPhone)) {
-    //     if (userRepository.existsByPhone(newPhone)) {
-    //         throw new ConflictException("Phone number already exists");
-    //     }
-    //     user.setPhone(newPhone);
-    // }
-
     user.setUpdatedAt(Instant.now());
     userRepository.save(user);
 
@@ -87,13 +78,4 @@ public void deleteUser(UUID id) {
     userRepository.delete(user);
 }
 
-    // @Override
-    // public void requestPasswordReset(PasswordResetRequest request) {
-    //     log.info("Password reset request received for {}", request.email());
-    // }
-
-    // @Override
-    // public void performPasswordReset(PasswordResetTokenRequest request) {
-    //     log.info("Password reset token submitted: {}", request.token());
-    // }
 }

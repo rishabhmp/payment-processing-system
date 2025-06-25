@@ -22,7 +22,6 @@ public record CreateUserRequest(
         String email,
 
         @NotBlank(message = "Phone is required")
-        // @Pattern(regexp = "\\d{10}", message = "Phone must be exactly 10 digits")
         @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits and contain only numbers")
 
         String phone

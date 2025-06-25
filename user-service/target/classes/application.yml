@@ -31,6 +31,9 @@
 server:
   port: 8081
 
+# jwt:
+#   secret: secret-key-change-this-in-prod-very-long-secret-256bits
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/userdb

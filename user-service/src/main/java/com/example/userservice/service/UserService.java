@@ -9,6 +9,4 @@ public interface UserService {
     UserResponse getUserById(UUID id);
     UserResponse updateUser(UUID id, UpdateUserRequest request);
     void deleteUser(UUID id);
-    // void requestPasswordReset(PasswordResetRequest request);
-    // void performPasswordReset(PasswordResetTokenRequest request);
 }
