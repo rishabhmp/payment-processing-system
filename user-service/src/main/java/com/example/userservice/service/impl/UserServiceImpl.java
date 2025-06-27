@@ -6,6 +6,8 @@ import com.example.userservice.exception.ConflictException;
 import com.example.userservice.exception.NotFoundException;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -21,6 +23,8 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final RestTemplate restTemplate;
 
     @Override
     @Transactional
@@ -37,9 +41,16 @@ public class UserServiceImpl implements UserService {
                 .firstName(request.firstName())
                 .lastName(request.lastName())
                 .phone(request.phone())
+                .password(passwordEncoder.encode(request.password()))
                 .build();
 
         UserProfile savedUser = userRepository.save(user);
+        try {
+            AuthRegistrationRequest authRequest = new AuthRegistrationRequest(request.email(), request.password());
+            restTemplate.postForEntity("http://auth-service/internal/auth/register", authRequest, Void.class);
+        } catch (Exception e) {
+            log.error("Failed to register user in auth-service: {}", e.getMessage());
+        }
         return savedUser.getId();
     }
 
