@@ -3,12 +3,12 @@ package com.example.authservice.controller;
 
 import com.example.authservice.dto.AuthResponse;
 import com.example.authservice.dto.LoginRequest;
-import com.example.authservice.dto.RegisterRequest;
+// import com.example.authservice.dto.RegisterRequest;
 import com.example.authservice.exception.UnauthorizedException;
 import com.example.authservice.service.AuthService;
 import jakarta.validation.Valid;
 import java.util.Map;
-import java.util.HashMap;
+// import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +22,12 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-        log.info("Registering user with email: {}", request.email());
-        AuthResponse response = authService.register(request);
-        return ResponseEntity.status(201).body(response);
-    }
+    // @PostMapping("/register")
+    // public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+    //     log.info("Registering user with email: {}", request.email());
+    //     AuthResponse response = authService.register(request);
+    //     return ResponseEntity.status(201).body(response);
+    // }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {

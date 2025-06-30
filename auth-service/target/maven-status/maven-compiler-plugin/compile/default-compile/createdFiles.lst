@@ -1,3 +1,4 @@
+com\example\authservice\dto\AuthRegistrationRequest.class
 com\example\authservice\exception\GlobalExceptionHandler.class
 com\example\authservice\dto\TokenValidationResponse.class
 com\example\authservice\entity\UserCredential$UserCredentialBuilder.class
@@ -15,6 +16,7 @@ com\example\authservice\exception\ApiException.class
 com\example\authservice\service\AuthService.class
 com\example\authservice\AuthServiceApplication.class
 com\example\authservice\repository\UserCredentialRepository.class
+com\example\authservice\controller\InternalAuthController.class
 com\example\authservice\dto\AuthResponse.class
 com\example\authservice\exception\BadRequestException.class
 com\example\authservice\exception\ConflictException.class

@@ -1,9 +1,12 @@
 server:
   port: 8082
+  forward-headers-strategy: framework
+
 logging:
   level:
     org.springframework.web: DEBUG
     com.example.authservice: DEBUG
+    org.springframework.security: DEBUG
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/authdb

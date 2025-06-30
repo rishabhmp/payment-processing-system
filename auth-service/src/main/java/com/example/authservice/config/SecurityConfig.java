@@ -2,7 +2,6 @@ package com.example.authservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,14 +16,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/v1/auth/register", "/v1/auth/login", "/v1/auth/validate").permitAll()
+                .requestMatchers("/v1/auth/**").permitAll()
+                .requestMatchers("/internal/auth/register").permitAll()
                 .anyRequest().authenticated()
             )
-            .httpBasic(Customizer.withDefaults());
+            .headers(headers -> headers
+                .httpStrictTransportSecurity(hsts -> hsts.disable())
+            );
 
         return http.build();
     }
