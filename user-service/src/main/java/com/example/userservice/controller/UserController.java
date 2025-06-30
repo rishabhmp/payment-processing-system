@@ -23,6 +23,7 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private final JwtTokenValidator jwtTokenValidator;
 
 @PostMapping
 public ResponseEntity<Map<String, String>> createUser(@Valid @RequestBody CreateUserRequest request) {
@@ -39,7 +40,13 @@ public ResponseEntity<Map<String, String>> createUser(@Valid @RequestBody Create
 }
 
    @GetMapping("/{id}")
-public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
+public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id,  @RequestHeader("Authorization") String authHeader) {
+     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+    if (!jwtTokenValidator.isValidToken(authHeader.substring(7))) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
     log.info("Fetching profile for user ID: {}", id);
     return ResponseEntity.ok(userService.getUserById(id));
 }
@@ -47,15 +54,26 @@ public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id) {
   @PutMapping("/{id}")
 public ResponseEntity<UserResponse> updateUser(
         @PathVariable UUID id,
-        @Valid @RequestBody UpdateUserRequest request
-) {
+        @Valid @RequestBody UpdateUserRequest request, @RequestHeader("Authorization") String authHeader) {
+     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+    if (!jwtTokenValidator.isValidToken(authHeader.substring(7))) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
     log.info("Updating user with ID: {}", id);
     return ResponseEntity.ok(userService.updateUser(id, request));
 }
 
 
     @DeleteMapping("/{id}")
-public ResponseEntity<MessageResponse> deleteUser(@PathVariable UUID id) {
+public ResponseEntity<MessageResponse> deleteUser(@PathVariable UUID id, @RequestHeader("Authorization") String authHeader) {
+     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+    if (!jwtTokenValidator.isValidToken(authHeader.substring(7))) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
     log.info("Deleting user by ID: {}", id);
     userService.deleteUser(id);
     return ResponseEntity.ok(new MessageResponse("User deleted successfully"));  

@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         UserProfile savedUser = userRepository.save(user);
         try {
             AuthRegistrationRequest authRequest = new AuthRegistrationRequest(request.email(), request.password());
-            restTemplate.postForEntity("http://auth-service/internal/auth/register", authRequest, Void.class);
+            restTemplate.postForEntity("http://localhost:8082/internal/auth/register", authRequest, Void.class);
         } catch (Exception e) {
             log.error("Failed to register user in auth-service: {}", e.getMessage());
         }

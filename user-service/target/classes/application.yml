@@ -1,5 +1,6 @@
 server:
   port: 8081
+  forward-headers-strategy: framework
 
 # jwt:
 #   secret: secret-key-change-this-in-prod-very-long-secret-256bits
