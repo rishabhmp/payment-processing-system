@@ -1,0 +1,15 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/paymentdb
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+stripe:
+  secret-key: sk_test_51RRp07C7ruuTVB4dh9297LI6y8ZVAjqPApxLepz7B3gDb6Ufp3OHEcKpSdouYs4B1GEkUkTQMa6COJkcMyBeJLiJ00VKzqQHAZ
