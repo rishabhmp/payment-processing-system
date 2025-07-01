@@ -5,6 +5,7 @@ import com.example.userservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import com.example.userservice.security.JwtTokenValidator;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
@@ -40,26 +41,26 @@ public ResponseEntity<Map<String, String>> createUser(@Valid @RequestBody Create
 }
 
    @GetMapping("/{id}")
-public ResponseEntity<UserResponse> getUserById(@PathVariable UUID id,  @RequestHeader("Authorization") String authHeader) {
+public ResponseEntity<?> getUserById(@PathVariable UUID id,  @RequestHeader(name = "Authorization", required = false) String authHeader) {
      if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Unauthorized user"));
     }
     if (!jwtTokenValidator.isValidToken(authHeader.substring(7))) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Invalid token"));
     }
     log.info("Fetching profile for user ID: {}", id);
     return ResponseEntity.ok(userService.getUserById(id));
 }
 
   @PutMapping("/{id}")
-public ResponseEntity<UserResponse> updateUser(
+public ResponseEntity<?> updateUser(
         @PathVariable UUID id,
-        @Valid @RequestBody UpdateUserRequest request, @RequestHeader("Authorization") String authHeader) {
-     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        @Valid @RequestBody UpdateUserRequest request, @RequestHeader(name = "Authorization", required = false) String authHeader) {
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Unauthorized user"));
     }
     if (!jwtTokenValidator.isValidToken(authHeader.substring(7))) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Invalid token"));
     }
     log.info("Updating user with ID: {}", id);
     return ResponseEntity.ok(userService.updateUser(id, request));
@@ -67,12 +68,12 @@ public ResponseEntity<UserResponse> updateUser(
 
 
     @DeleteMapping("/{id}")
-public ResponseEntity<MessageResponse> deleteUser(@PathVariable UUID id, @RequestHeader("Authorization") String authHeader) {
-     if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+public ResponseEntity<MessageResponse> deleteUser(@PathVariable UUID id, @RequestHeader(name = "Authorization", required = false) String authHeader) {
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Unauthorized user"));
     }
     if (!jwtTokenValidator.isValidToken(authHeader.substring(7))) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Invalid token"));
     }
     log.info("Deleting user by ID: {}", id);
     userService.deleteUser(id);

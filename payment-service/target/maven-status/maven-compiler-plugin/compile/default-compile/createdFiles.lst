@@ -5,11 +5,11 @@ com\example\paymentservice\exception\StripeServiceException.class
 com\example\paymentservice\dto\PaymentRequest.class
 com\example\paymentservice\service\PaymentService.class
 com\example\paymentservice\service\impl\PaymentServiceImpl.class
-com\example\paymentservice\dto\ErrorResponse.class
 com\example\paymentservice\exception\GlobalExceptionHandler.class
 com\example\paymentservice\repository\PaymentRepository.class
 com\example\paymentservice\exception\PaymentException.class
 com\example\paymentservice\config\StripeConfig.class
 com\example\paymentservice\entity\PaymentTransaction.class
 com\example\paymentservice\exception\AccessDeniedException.class
+com\example\paymentservice\security\JwtTokenValidator.class
 com\example\paymentservice\entity\PaymentTransaction$PaymentTransactionBuilder.class

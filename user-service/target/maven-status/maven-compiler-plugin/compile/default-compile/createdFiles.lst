@@ -14,6 +14,7 @@ com\example\userservice\service\UserService.class
 com\example\userservice\exception\GlobalExceptionHandler.class
 com\example\userservice\service\impl\UserServiceImpl.class
 com\example\userservice\repository\UserRepository.class
+com\example\userservice\security\JwtTokenValidator.class
 com\example\userservice\dto\CreateUserRequest.class
 com\example\userservice\entity\UserProfile$UserProfileBuilder.class
 com\example\userservice\config\WebConfig.class

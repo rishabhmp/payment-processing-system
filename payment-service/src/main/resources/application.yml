@@ -13,3 +13,7 @@ spring:
 
 stripe:
   secret-key: sk_test_51RRp07C7ruuTVB4dh9297LI6y8ZVAjqPApxLepz7B3gDb6Ufp3OHEcKpSdouYs4B1GEkUkTQMa6COJkcMyBeJLiJ00VKzqQHAZ
+
+jwt:
+  secret: secret-key-change-this-in-prod-very-long-secret-256bits
+
