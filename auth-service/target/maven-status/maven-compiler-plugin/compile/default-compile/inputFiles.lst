@@ -3,7 +3,6 @@ C:\Users\Perennial\Desktop\payment-processing-system\auth-service\src\main\java\
 C:\Users\Perennial\Desktop\payment-processing-system\auth-service\src\main\java\com\example\authservice\exception\UnauthorizedException.java
 C:\Users\Perennial\Desktop\payment-processing-system\auth-service\src\main\java\com\example\authservice\entity\UserCredential.java
 C:\Users\Perennial\Desktop\payment-processing-system\auth-service\src\main\java\com\example\authservice\exception\NotFoundException.java
-C:\Users\Perennial\Desktop\payment-processing-system\auth-service\src\main\java\com\example\authservice\dto\RegisterRequest.java
 C:\Users\Perennial\Desktop\payment-processing-system\auth-service\src\main\java\com\example\authservice\dto\AuthResponse.java
 C:\Users\Perennial\Desktop\payment-processing-system\auth-service\src\main\java\com\example\authservice\exception\BadRequestException.java
 C:\Users\Perennial\Desktop\payment-processing-system\auth-service\src\main\java\com\example\authservice\service\AuthService.java

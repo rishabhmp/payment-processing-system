@@ -3,14 +3,15 @@ package com.example.authservice.controller;
 
 import com.example.authservice.dto.AuthResponse;
 import com.example.authservice.dto.LoginRequest;
-// import com.example.authservice.dto.RegisterRequest;
 import com.example.authservice.exception.UnauthorizedException;
 import com.example.authservice.service.AuthService;
 import jakarta.validation.Valid;
+import com.example.authservice.security.JwtTokenUtil;
 import java.util.Map;
-// import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,16 +20,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
-
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
     private final AuthService authService;
-
-    // @PostMapping("/register")
-    // public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
-    //     log.info("Registering user with email: {}", request.email());
-    //     AuthResponse response = authService.register(request);
-    //     return ResponseEntity.status(201).body(response);
-    // }
-
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         log.info("Attempting login for user: {}", request.email());
@@ -37,17 +31,22 @@ public class AuthController {
     }
 
     @GetMapping("/validate")
-public ResponseEntity<Object> validateToken(@RequestHeader("Authorization") String authHeader) {
-    log.info("Validating token");
+    public ResponseEntity<Object> validateToken(@RequestHeader("Authorization") String authHeader) {
+        log.info("Validating token");
 
-    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-        throw new UnauthorizedException("Missing or invalid Authorization header");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new UnauthorizedException("Missing or invalid Authorization header");
+        }
+
+        String token = authHeader.substring(7);
+        boolean valid = authService.validateToken(token);
+
+        if (valid) {
+            String email = jwtTokenUtil.getEmailFromToken(token);  // Extract email (sub claim)
+            return ResponseEntity.ok(Map.of("valid", valid, "email", email));  // Return the email as "sub"
+        } else {
+            return ResponseEntity.ok(Map.of("valid", valid));
+        }
     }
-
-    String token = authHeader.substring(7);
-    boolean valid = authService.validateToken(token);
-
-    return ResponseEntity.ok(Map.of("valid", valid));
-}
 
 }

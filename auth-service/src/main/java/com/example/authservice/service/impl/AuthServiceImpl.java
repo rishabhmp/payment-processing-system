@@ -2,9 +2,7 @@ package com.example.authservice.service.impl;
 
 import com.example.authservice.dto.AuthResponse;
 import com.example.authservice.dto.LoginRequest;
-// import com.example.authservice.dto.RegisterRequest;
 import com.example.authservice.entity.UserCredential;
-import com.example.authservice.exception.ConflictException;
 import com.example.authservice.exception.UnauthorizedException;
 import com.example.authservice.repository.UserCredentialRepository;
 import com.example.authservice.security.JwtTokenUtil;
@@ -13,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.example.authservice.dto.AuthRegistrationRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,32 +21,6 @@ public class AuthServiceImpl implements AuthService {
     private final UserCredentialRepository userCredentialRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
-
-
-    // @Override
-    // public AuthResponse register(RegisterRequest request) {
-    //     log.info("Registering user with email: {}", request.email());
-
-    //     if (userCredentialRepository.existsByEmail(request.email())) {
-    //         log.warn("Registration failed — email already in use: {}", request.email());
-    //         throw new ConflictException("Email already registered");
-    //     }
-
-    //     String encodedPassword = passwordEncoder.encode(request.password());
-
-    //     UserCredential user = UserCredential.builder()
-    //             .email(request.email())
-    //             .passwordHash(encodedPassword)
-    //             .role("ROLE_USER")
-    //             .build();
-
-    //     userCredentialRepository.save(user);
-
-    //     String token = jwtTokenUtil.generateToken(user.getEmail(), user.getRole());
-
-    //     log.info("User registered successfully: {}", user.getEmail());
-    //     return new AuthResponse("User registered successfully", token);
-    // }
 
     @Override
     public void internalRegister(AuthRegistrationRequest request) {

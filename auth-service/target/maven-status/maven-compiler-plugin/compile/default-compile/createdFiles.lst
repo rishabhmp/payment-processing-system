@@ -4,7 +4,6 @@ com\example\authservice\dto\TokenValidationResponse.class
 com\example\authservice\entity\UserCredential$UserCredentialBuilder.class
 com\example\authservice\exception\NotFoundException.class
 com\example\authservice\entity\UserCredential.class
-com\example\authservice\dto\RegisterRequest.class
 com\example\authservice\service\impl\AuthServiceImpl.class
 com\example\authservice\security\JwtTokenUtil.class
 com\example\authservice\controller\AuthController.class
