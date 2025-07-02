@@ -1,4 +1,3 @@
-C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\security\JwtTokenUtil.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\exception\ApiException.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\dto\UpdateUserRequest.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\dto\PasswordResetRequest.java
@@ -8,8 +7,6 @@ C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\service\impl\UserServiceImpl.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\config\WebConfig.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\security\JwtTokenValidator.java
-C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\config\SecurityConfig.java
-C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\security\JwtAuthenticationFilter.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\controller\UserController.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\exception\ConflictException.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\entity\UserProfile.java

@@ -33,9 +33,6 @@ public class UserProfile {
     @Column(length = 20)
     private String phone;
 
-    @Column(nullable = false)
-    private String password;
-
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
