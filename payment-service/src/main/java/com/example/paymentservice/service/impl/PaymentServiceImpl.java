@@ -24,10 +24,21 @@ import java.time.LocalDateTime;
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
+    private static final long MIN_AMOUNT = 50_00;
+    private static final long MAX_AMOUNT = 999_00;
 
     @Override
     public PaymentResponse processPayment(PaymentRequest request) {
         try {
+            if(request.getAmount()<MIN_AMOUNT){
+                throw new PaymentException("Amount must be at least 50 USD.");
+            }
+            if(request.getAmount()>MAX_AMOUNT){
+                throw new PaymentException("Amount exceeds the maximum limit of 999 USD.");
+            }
+            if(!"USD".equalsIgnoreCase(request.getCurrency())){
+                throw new PaymentException("Currency must be USD");
+            }
             // Step 1: Create PaymentIntent
             PaymentIntentCreateParams intentParams = PaymentIntentCreateParams.builder()
             .setAmount(request.getAmount())

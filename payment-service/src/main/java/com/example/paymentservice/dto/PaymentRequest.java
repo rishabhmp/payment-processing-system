@@ -3,6 +3,7 @@ package com.example.paymentservice.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
@@ -12,6 +13,7 @@ public class PaymentRequest {
     private Long amount;
 
     @NotBlank(message = "Currency is required")
+    @Pattern(regexp = "USD", message = "Currency must be USD")
     private String currency;
 
     @NotBlank(message = "Customer email is required")
