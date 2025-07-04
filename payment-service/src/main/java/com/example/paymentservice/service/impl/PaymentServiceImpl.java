@@ -25,7 +25,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
     private static final long MIN_AMOUNT = 50_00;
-    private static final long MAX_AMOUNT = 999_00;
+    private static final long MAX_AMOUNT = 500_00;
 
     @Override
     public PaymentResponse processPayment(PaymentRequest request) {
