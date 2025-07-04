@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.example.paymentservice.service.impl.PaymentServiceImplTest
--------------------------------------------------------------------------------
-Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.727 s -- in com.example.paymentservice.service.impl.PaymentServiceImplTest
