@@ -1,3 +1,4 @@
+com\example\userservice\dto\ResponseDTO.class
 com\example\userservice\exception\ForbiddenException.class
 com\example\userservice\exception\BadRequestException.class
 com\example\userservice\controller\UserController$MessageResponse.class

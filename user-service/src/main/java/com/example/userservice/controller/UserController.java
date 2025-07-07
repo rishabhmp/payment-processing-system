@@ -34,16 +34,11 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, String>> createUser(@Valid @RequestBody CreateUserRequest request) {
+    public ResponseEntity<ResponseDTO> createUser(@Valid @RequestBody CreateUserRequest request) {
         log.info("Creating user: {}", request.email());
-        UUID userId = userService.createUser(request);
+        userService.createUser(request);
 
-        Map<String, String> response = Map.of(
-            "message", "User created successfully",
-            "userId", userId.toString()
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response); 
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("User created successfully"));
     }
 
     @GetMapping("/{id}")
