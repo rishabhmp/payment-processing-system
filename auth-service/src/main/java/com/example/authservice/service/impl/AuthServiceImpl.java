@@ -9,7 +9,6 @@ import com.example.authservice.security.JwtTokenUtil;
 import com.example.authservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.example.authservice.dto.AuthRegistrationRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,27 +20,6 @@ public class AuthServiceImpl implements AuthService {
     private final UserCredentialRepository userCredentialRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
-
-    @Override
-    public void internalRegister(AuthRegistrationRequest request) {
-        log.info("Registering internal user: {}", request.email());
-
-        if (userCredentialRepository.existsByEmail(request.email())) {
-            log.warn("User already exists in auth DB: {}", request.email());
-            return;
-        }
-
-        String encodedPassword = passwordEncoder.encode(request.password());
-
-        UserCredential user = UserCredential.builder()
-                .email(request.email())
-                .passwordHash(encodedPassword)
-                .role("ROLE_USER")
-                .build();
-
-        userCredentialRepository.save(user);
-        log.info("User saved in auth DB: {}", user.getEmail());
-    }
 
     @Override
     public AuthResponse login(LoginRequest request) {

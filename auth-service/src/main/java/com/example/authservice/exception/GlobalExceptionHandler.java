@@ -37,6 +37,15 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<Map<String, Object>> handleUnauthorized(UnauthorizedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                "error", ex.getMessage(),
+                "status", HttpStatus.UNAUTHORIZED.value(),
+                "timestamp", Instant.now().toString()
+        ));
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, Object>> handleBadCredentials(BadCredentialsException ex) {
         return buildErrorResponse("Invalid email or password", HttpStatus.UNAUTHORIZED);

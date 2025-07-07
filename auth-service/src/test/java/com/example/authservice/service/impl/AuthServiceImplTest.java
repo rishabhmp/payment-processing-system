@@ -1,6 +1,5 @@
 package com.example.authservice.service.impl;
 
-import com.example.authservice.dto.AuthRegistrationRequest;
 import com.example.authservice.dto.AuthResponse;
 import com.example.authservice.dto.LoginRequest;
 import com.example.authservice.entity.UserCredential;
@@ -36,33 +35,6 @@ class AuthServiceImplTest {
 
     private final String email = "test@example.com";
     private final String password = "password123";
-
-    @Test
-    void internalRegister_UserDoesNotExist_SavesUser() {
-        AuthRegistrationRequest request = new AuthRegistrationRequest(email, password);
-
-        when(userCredentialRepository.existsByEmail(email)).thenReturn(false);
-        when(passwordEncoder.encode(password)).thenReturn("encodedPass");
-
-        authService.internalRegister(request);
-
-        verify(userCredentialRepository).save(argThat(user ->
-                user.getEmail().equals(email)
-                        && user.getPasswordHash().equals("encodedPass")
-                        && user.getRole().equals("ROLE_USER")
-        ));
-    }
-
-    @Test
-    void internalRegister_UserAlreadyExists_DoesNotSave() {
-        AuthRegistrationRequest request = new AuthRegistrationRequest(email, password);
-
-        when(userCredentialRepository.existsByEmail(email)).thenReturn(true);
-
-        authService.internalRegister(request);
-
-        verify(userCredentialRepository, never()).save(any());
-    }
 
     @Test
     void login_Success_ReturnsToken() {

@@ -34,11 +34,11 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> createUser(@Valid @RequestBody CreateUserRequest request) {
+    public ResponseEntity<CreateUserResponseDTO> createUser(@Valid @RequestBody CreateUserRequest request) {
         log.info("Creating user: {}", request.email());
         userService.createUser(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO("User created successfully"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CreateUserResponseDTO("User created successfully"));
     }
 
     @GetMapping("/{id}")

@@ -4,11 +4,11 @@ C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\exception\ForbiddenException.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\service\UserService.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\dto\CreateUserRequest.java
+C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\dto\CreateUserResponseDTO.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\service\impl\UserServiceImpl.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\config\WebConfig.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\security\JwtTokenValidator.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\controller\UserController.java
-C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\dto\ResponseDTO.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\exception\ConflictException.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\entity\UserProfile.java
 C:\Users\Perennial\Desktop\payment-processing-system\user-service\src\main\java\com\example\userservice\dto\AuthRegistrationRequest.java
