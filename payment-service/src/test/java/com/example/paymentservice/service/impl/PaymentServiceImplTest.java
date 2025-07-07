@@ -44,7 +44,7 @@ class PaymentServiceImplTest {
         PaymentRequest request = new PaymentRequest();
         request.setAmount(5000L); // $50
         request.setCurrency("USD");
-        request.setCustomerEmail("test@example.com");
+        String customerEmail= "test@example.com";
 
         PaymentIntent paymentIntentMock = mock(PaymentIntent.class);
         when(paymentIntentMock.getId()).thenReturn("pi_test_123");
@@ -58,7 +58,7 @@ class PaymentServiceImplTest {
                     .thenReturn(paymentIntentMock);
 
             // Act
-            PaymentResponse response = paymentService.processPayment(request);
+            PaymentResponse response = paymentService.processPayment(request, customerEmail);
 
             // Assert
             assertEquals("pi_test_123", response.getTransactionId());
@@ -76,10 +76,10 @@ class PaymentServiceImplTest {
         PaymentRequest request = new PaymentRequest();
         request.setAmount(4999L); // Just below $50
         request.setCurrency("USD");
-        request.setCustomerEmail("user@example.com");
+        String customerEmail= "test@example.com";
 
         PaymentException ex = assertThrows(PaymentException.class,
-                () -> paymentService.processPayment(request));
+                () -> paymentService.processPayment(request, customerEmail));
 
         assertTrue(ex.getMessage().contains("Amount must be at least 50 USD"));
     }
@@ -89,10 +89,10 @@ class PaymentServiceImplTest {
         PaymentRequest request = new PaymentRequest();
         request.setAmount(50100L); // Over $500
         request.setCurrency("USD");
-        request.setCustomerEmail("user@example.com");
+        String customerEmail= "test@example.com";
 
         PaymentException ex = assertThrows(PaymentException.class,
-                () -> paymentService.processPayment(request));
+                () -> paymentService.processPayment(request, customerEmail));
 
         assertTrue(ex.getMessage().contains("Amount exceeds the maximum limit"));
     }
@@ -102,10 +102,10 @@ class PaymentServiceImplTest {
         PaymentRequest request = new PaymentRequest();
         request.setAmount(5000L);
         request.setCurrency("EUR");
-        request.setCustomerEmail("user@example.com");
+        String customerEmail= "test@example.com";
 
         PaymentException ex = assertThrows(PaymentException.class,
-                () -> paymentService.processPayment(request));
+                () -> paymentService.processPayment(request, customerEmail));
 
         assertTrue(ex.getMessage().contains("Currency must be USD"));
     }
@@ -115,14 +115,14 @@ class PaymentServiceImplTest {
         PaymentRequest request = new PaymentRequest();
         request.setAmount(5000L);
         request.setCurrency("USD");
-        request.setCustomerEmail("user@example.com");
+        String customerEmail= "test@example.com";
 
         try (MockedStatic<PaymentIntent> mockedStatic = mockStatic(PaymentIntent.class)) {
             mockedStatic.when(() -> PaymentIntent.create(any(PaymentIntentCreateParams.class)))
                         .thenThrow(new ApiException("Stripe error", null, null, 400, null));
 
             PaymentException ex = assertThrows(PaymentException.class,
-                    () -> paymentService.processPayment(request));
+                    () -> paymentService.processPayment(request, customerEmail));
 
             assertTrue(ex.getMessage().contains("Stripe error"));
         }

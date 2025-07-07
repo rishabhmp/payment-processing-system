@@ -26,13 +26,13 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
 
     @Override
-    public PaymentResponse processPayment(PaymentRequest request) {
+    public PaymentResponse processPayment(PaymentRequest request, String customerEmail) {
         try {
             // Step 1: Create PaymentIntent
             PaymentIntentCreateParams intentParams = PaymentIntentCreateParams.builder()
             .setAmount(request.getAmount())
             .setCurrency(request.getCurrency())
-            .setReceiptEmail(request.getCustomerEmail())
+            .setReceiptEmail(customerEmail)
             .setDescription("Payment for order")
             .setAutomaticPaymentMethods(
                 PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
@@ -57,7 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
                     .stripeTransactionId(paymentIntent.getId())
                     .amount(request.getAmount())
                     .currency(request.getCurrency())
-                    .customerEmail(request.getCustomerEmail())
+                    .customerEmail(customerEmail)
                     .status(paymentIntent.getStatus())
                     .createdAt(LocalDateTime.now())
                     .build();

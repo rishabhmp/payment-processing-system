@@ -37,10 +37,15 @@ public class PaymentController {
             logger.warn("Invalid JWT token");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Invalid token");
         }
+        String customerEmail = jwtTokenValidator.extractEmail(token);
+        if (customerEmail == null) {
+            logger.warn("Could not extract email from token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Invalid token data");
+        }
 
-        logger.info("Received payment request for customer: {}", request.getCustomerEmail());
+        logger.info("Received payment request for customer: {}", customerEmail);
 
-        PaymentResponse response = paymentService.processPayment(request);
+        PaymentResponse response = paymentService.processPayment(request, customerEmail);
         return ResponseEntity.ok(response);
     }
 }

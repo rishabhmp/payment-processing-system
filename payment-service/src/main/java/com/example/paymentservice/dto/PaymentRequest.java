@@ -12,12 +12,8 @@ public class PaymentRequest {
     private Long amount;
 
     @NotBlank(message = "Currency is required")
-    @Pattern(regexp = "USD", message = "Currency must be USD")
+    @Pattern(regexp = "(?i)^usd$", message = "Currency must be USD")
     private String currency;
-
-    @NotBlank(message = "Customer email is required")
-    @Email(message = "Invalid email format")
-    private String customerEmail;
 
     private String paymentMethodId;
 }
